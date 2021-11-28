@@ -5,6 +5,9 @@ import {
   DeleteListing as IDeleteListingsData,
   DeleteListingVariables as IDeleteListingsVariables,
 } from './__generated__/DeleteListing';
+import './styles/Listings.css';
+import { Alert, Avatar, Button, List, Spin } from 'antd';
+import { ListingsSkeleton } from '../components';
 
 interface Props {
   title: string;
@@ -54,39 +57,69 @@ export const Listings: FC<Props> = ({ title }) => {
     await refetch();
   };
 
-  const listingsList =
-    listings?.map((listing) => (
-      <li key={listing.id}>
-        {listing.title}
-        <button onClick={() => handleDeleteListing(listing.id)}>Delete</button>
-      </li>
-    )) ?? null;
+  const listingsList = listings ? (
+    <List
+      itemLayout="horizontal"
+      dataSource={listings}
+      renderItem={(listing) => (
+        <List.Item
+          actions={[
+            <Button
+              type="primary"
+              onClick={() => handleDeleteListing(listing.id)}
+            >
+              Delete
+            </Button>,
+          ]}
+        >
+          <List.Item.Meta
+            title={listing.title}
+            description={listing.address}
+            avatar={<Avatar src={listing.image} shape="square" size={48} />}
+          />
+        </List.Item>
+      )}
+    ></List>
+  ) : null;
 
   if (loading) {
-    return <h2>loading...</h2>;
+    return (
+      <div className="listings">
+        <ListingsSkeleton title={title} />
+      </div>
+    );
   }
 
   if (error) {
-    return <h2>Something went wrong - please try again later!!</h2>;
+    return (
+      <div className="listings">
+        <ListingsSkeleton title={title} error={true} />
+      </div>
+    );
   }
 
-  const deleteListingLoadingMessage = deleteLoading ? (
-    <h4>Deletion in progress...</h4>
-  ) : null;
-
-  const deleteListingErrorMessage = deleteError ? (
-    <h4>
-      Oh no! Something went wrong - could not delete item. Please try again
-      later!!
-    </h4>
+  const deleteListingErrorAlert = deleteError ? (
+    <Alert
+      type="error"
+      message={
+        <>
+          Oh no! Something went wrong - please try again later
+          <span role="img" aria-label="Sad face emoji">
+            😞
+          </span>
+        </>
+      }
+      className="listing__alert"
+    />
   ) : null;
 
   return (
-    <div>
-      <h2>{title}</h2>
-      <ul>{listingsList}</ul>
-      {deleteListingLoadingMessage}
-      {deleteListingErrorMessage}
+    <div className="listings">
+      <Spin spinning={deleteLoading || loading}>
+        {deleteListingErrorAlert}
+        <h2>{title}</h2>
+        <ul>{listingsList}</ul>
+      </Spin>
     </div>
   );
 };
