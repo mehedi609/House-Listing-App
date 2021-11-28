@@ -1,4 +1,5 @@
-import { ObjectId, Collection } from "mongodb";
+import {Types} from "mongoose";
+
 export enum ListingType {
   Apartment = "APARTMENT",
   House = "HOUSE",
@@ -16,16 +17,7 @@ export interface IBookingsIndex {
   [key: string]: IBookingsIndexYear;
 }
 
-export interface IBooking {
-  _id: ObjectId;
-  listing: ObjectId;
-  tenant: string;
-  checkIn: string;
-  checkOut: string;
-}
-
 export interface IListing {
-  _id: ObjectId;
   title: string;
   description: string;
   image: string;
@@ -35,26 +27,27 @@ export interface IListing {
   country: string;
   admin: string;
   city: string;
-  bookings: ObjectId[];
+  bookings: Types.ObjectId[];
   bookingsIndex: IBookingsIndex;
   price: number;
-  numOfGuests: number;
 }
 
 export interface IUser {
-  _id: string;
   token: string;
   name: string;
   avatar: string;
   contact: string;
   walletId?: string;
   income: number;
-  bookings: ObjectId[];
-  listings: ObjectId[];
+  bookings: Types.ObjectId[];
+  listings: Types.ObjectId[];
 }
 
-export interface IDatabase {
-  listings: Collection<IListing>;
-  bookings: Collection<IBooking>;
-  users: Collection<IUser>;
+export interface IBooking {
+  title: string;
+}
+
+interface IPopulatedUser {
+  bookings: IBooking[] | null;
+  listings: IListing[] | null;
 }
