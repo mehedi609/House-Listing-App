@@ -1,14 +1,14 @@
-import { Listing } from "../models";
+import {ListingModel} from "../models";
 
 export const resolvers = {
   Query: {
     listings: async () => {
-      return Listing.find();
+      return ListingModel.find();
     },
   },
   Mutation: {
     deleteListing: async (_root: undefined, { id }: { id: string }) => {
-      return Listing.findByIdAndRemove(id);
+      return ListingModel.findByIdAndRemove(id);
     },
   },
 };
