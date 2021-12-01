@@ -8,7 +8,7 @@ import { IBooking, IDatabase, IListing, IUser } from "../lib/types";
 
 export const connectDatabase = async (): Promise<IDatabase> => {
   const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
-  const client = new MongoClient(uri);
+  const client = new MongoClient(uri, { useUnifiedTopology: true });
 
   await client.connect();
 
@@ -22,3 +22,7 @@ export const connectDatabase = async (): Promise<IDatabase> => {
     listings: db.collection<IListing>("listings"),
   };
 };
+
+export interface IContext {
+  db: IDatabase;
+}
