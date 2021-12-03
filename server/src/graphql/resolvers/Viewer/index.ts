@@ -94,10 +94,10 @@ export const ViewerResolvers: IResolvers = {
   Mutation: {
     logIn: async (
       _root: undefined,
-      { input }: ILogInArgs,
+      { logInInput }: ILogInArgs,
       { db }: IContext
     ): Promise<IViewer> => {
-      const code = input ? input.code : null;
+      const code = logInInput ? logInInput.code : null;
       const token = crypto.randomBytes(16).toString("hex");
 
       try {

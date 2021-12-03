@@ -1,3 +1,3 @@
 export interface ILogInArgs {
-  input: { code: string } | null;
+  logInInput: { code: string } | null;
 }
